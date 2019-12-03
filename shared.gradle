@@ -37,7 +37,7 @@ ext.versions = [
         frameworkanubis                 : '0.1.0-BUILD-SNAPSHOT',
         frameworkpermittedfeignclient   : '0.1.0-BUILD-SNAPSHOT',
         validator                       : '5.3.0.Final',
-        springjavamail                  : '1.4.1.RELEASE',
+        springjavamail                  : '2.2.1.RELEASE',
         twilioapi                       : '7.17.+',
         junit                           : '4.12',
         apachecsvreader                 : '1.4'
@@ -57,8 +57,8 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.spring.platform:platform-bom:Athens-RELEASE'
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR1'
+        mavenBom 'io.spring.platform:platform-bom:Cairo-SR8'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE'
     }
 }
 
@@ -66,7 +66,7 @@ dependencyManagement {
 ext['cassandra.version'] = '3.6'
 ext['cassandra-driver.version'] = '3.1.2'
 ext['activemq.version'] = '5.13.2'
-ext['spring-data-releasetrain.version'] = 'Gosling-SR2A'
+ext['spring-data-releasetrain.version'] = 'Moore-SR2'
 
 dependencies {
     compile(
