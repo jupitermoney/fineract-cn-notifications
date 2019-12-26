@@ -24,7 +24,6 @@ import org.apache.fineract.cn.identity.api.v1.domain.Authentication;
 import org.apache.fineract.cn.lang.TenantContextHolder;
 import org.apache.fineract.cn.notification.service.ServiceConstants;
 import org.apache.fineract.cn.notification.service.internal.config.NotificationProperties;
-import org.apache.fineract.cn.permittedfeignclient.service.ApplicationAccessTokenService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,11 +38,11 @@ public class NotificationAuthentication {
 
 
   @Autowired
-  public NotificationAuthentication(final NotificationProperties notificationPropertities,
+  public NotificationAuthentication(final NotificationProperties notificationProperties,
                                     final IdentityManager identityManager,
                                     @Qualifier(ServiceConstants.LOGGER_NAME) final Logger logger) {
     this.logger = logger;
-    this.notificationProperties = notificationPropertities;
+    this.notificationProperties = notificationProperties;
     this.identityManager = identityManager;
   }
 
