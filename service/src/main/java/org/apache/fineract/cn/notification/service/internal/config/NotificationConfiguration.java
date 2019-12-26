@@ -32,6 +32,7 @@ import org.apache.fineract.cn.lang.config.EnableServiceException;
 import org.apache.fineract.cn.lang.config.EnableTenantContext;
 import org.apache.fineract.cn.postgresql.config.EnablePostgreSQL;
 import org.apache.fineract.cn.notification.service.ServiceConstants;
+import org.eclipse.persistence.config.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -68,7 +69,7 @@ import java.nio.charset.StandardCharsets;
 @EnableAnubis
 @EnableServiceException
 @EnableJms
-@EnableConfigurationProperties
+@EnableConfigurationProperties({NotificationActiveMQProperties.class, NotificationProperties.class})
 @EnableFeignClients(
 		clients = {
 				CustomerManager.class,
@@ -103,23 +104,25 @@ public class NotificationConfiguration extends WebMvcConfigurerAdapter {
 	}
 	
 	@Bean
-	public PooledConnectionFactory jmsFactory() {
+	public PooledConnectionFactory jmsFactory(final NotificationActiveMQProperties notificationActiveMQProperties) {
 		PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory();
 		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();
-		activeMQConnectionFactory.setBrokerURL(this.environment.getProperty("activemq.brokerUrl", "vm://localhost?broker.persistent=false"));
+		activeMQConnectionFactory.setBrokerURL(notificationActiveMQProperties.getBrokerUrl());
+		activeMQConnectionFactory.setUserName(notificationActiveMQProperties.getUsername());
+		activeMQConnectionFactory.setPassword(notificationActiveMQProperties.getPassword());
 		pooledConnectionFactory.setConnectionFactory(activeMQConnectionFactory);
 		return pooledConnectionFactory;
 	}
 	
 	@Bean
-	public JmsListenerContainerFactory jmsListenerContainerFactory(PooledConnectionFactory jmsFactory) {
+	public JmsListenerContainerFactory jmsListenerContainerFactory(final PooledConnectionFactory jmsFactory,final NotificationActiveMQProperties notificationActiveMQProperties) {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setPubSubDomain(true);
 		factory.setConnectionFactory(jmsFactory);
 		factory.setErrorHandler(ex -> {
 			loggerBean().error(ex.getCause().toString());
 		});
-		factory.setConcurrency(this.environment.getProperty("activemq.concurrency", "1"));
+		factory.setConcurrency(notificationActiveMQProperties.getConcurrency());
 		return factory;
 	}
 	
